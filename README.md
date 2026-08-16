@@ -30,6 +30,16 @@ npm start
 
 > 需通过本地服务器打开，ES module + 跨域字体需要 HTTP 协议，**不能**双击 `index.html`。
 
+## 部署
+
+```bash
+npm run build   # 把静态文件复制到 build/
+```
+
+输出到 `build/` 目录，可被任何静态托管服务直接 serve（Render / Netlify / Vercel / 帽子云 / Sealos / Cloudflare Pages 等）。`.dockerignore` 已排除 `node_modules/ .git/ build/ tests/` 等无关内容，buildkit 上下文干净。
+
+帽子云 / Render 等需要 `build` 目录的容器平台：保持默认配置（`build command: npm run build`，`publish dir: build`）即可。
+
 ## 开发预览结果卡（跳过答题）
 
 - 核心：<http://localhost:8080/?preview=COVERED>

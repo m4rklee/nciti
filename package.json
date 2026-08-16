@@ -4,6 +4,7 @@
   "type": "module",
   "scripts": {
     "test": "node --test tests/scoring.test.js",
-    "start": "python3 -m http.server 8080"
+    "start": "python3 -m http.server 8080",
+    "build": "rm -rf build && mkdir -p build && cp -r index.html css js images package.json README.md build/ && echo 'Static site built to ./build'"
   }
 }

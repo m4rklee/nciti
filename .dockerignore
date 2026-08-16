@@ -1,0 +1,12 @@
+# 不要把构建上下文里无关的东西塞给 Docker
+node_modules/
+.git/
+.gitignore
+.dockerignore
+tests/
+build/
+*.log
+.DS_Store
+Thumbs.db
+.ipynb_checkpoints/
+**/.ipynb_checkpoints/
