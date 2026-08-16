@@ -1,0 +1,36 @@
+# Dependencies
+node_modules/
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Jupyter / IPython checkpoints (auto-generated, do not commit)
+.ipynb_checkpoints/
+**/.ipynb_checkpoints/
+
+# Local server log
+/tmp/nciti-http.log
+
+# Backup directories
+*.bak/
+*.bak.*
+
+# Build / cache output
+dist/
+build/
+.cache/
+
+# Local env
+.env
+.env.local
