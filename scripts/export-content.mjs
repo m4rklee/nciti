@@ -12,14 +12,14 @@
 import { mkdirSync, writeFileSync, existsSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { QUESTIONS } from '../js/data.js';
+import { QUESTIONS, EASTER_EGGS } from '../js/data.js';
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
 const target = join(root, 'data', 'content.json');
 const force = process.argv.includes('--force');
 const version = '0.1.0';
 
-const content = { version, questions: QUESTIONS };
+const content = { version, easterEggs: EASTER_EGGS, questions: QUESTIONS };
 
 if (!force && existsSync(target)) {
   console.error(`✗ ${target} 已存在。`);

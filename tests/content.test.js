@@ -6,7 +6,7 @@
 import { describe, it } from 'node:test';
 import assert from 'node:assert/strict';
 import { validateContent } from '../js/content.js';
-import { QUESTIONS, PERSONALITIES } from '../js/data.js';
+import { QUESTIONS, PERSONALITIES, EASTER_EGGS } from '../js/data.js';
 
 const ALLOWED_TAGS = Object.keys(PERSONALITIES);
 
@@ -14,6 +14,7 @@ const ALLOWED_TAGS = Object.keys(PERSONALITIES);
 function fixture() {
   return {
     version: '0.1.0',
+    easterEggs: JSON.parse(JSON.stringify(EASTER_EGGS)),
     questions: JSON.parse(JSON.stringify(QUESTIONS)),
   };
 }
@@ -137,5 +138,74 @@ describe('validateContent', () => {
     const allTags = new Set();
     for (const q of QUESTIONS) for (const opt of q.options) allTags.add(opt.tag);
     for (const t of allTags) assert.ok(ALLOWED_TAGS.includes(t), `tag ${t} 应在人格表内`);
+  });
+});
+
+describe('validateContent · easterEggs', () => {
+  it('缺省 easterEggs 视为合法(回退内置彩蛋表)', () => {
+    const c = fixture();
+    delete c.easterEggs;
+    const r = validateContent(c, ALLOWED_TAGS);
+    assert.equal(r.ok, true);
+    assert.equal(r.easterEggs, EASTER_EGGS, '缺省时返回内置彩蛋表');
+  });
+
+  it('合法 easterEggs 通过', () => {
+    const r = ok(fixture());
+    assert.equal(Object.keys(r.easterEggs).length, Object.keys(EASTER_EGGS).length);
+  });
+
+  it('彩蛋 key 是核心人格(非 easter 类)拒绝', () => {
+    const c = fixture();
+    c.easterEggs.LESER = { q: 0, opt: 'A' };
+    const r = fail(c, '核心人格彩蛋');
+    assert.ok(r.errors.some((e) => e.q === 'LESER' && e.field === 'easterEggs'));
+  });
+
+  it('彩蛋 key 不在人格表内拒绝', () => {
+    const c = fixture();
+    c.easterEggs.GHOST = { q: 0, opt: 'A' };
+    const r = fail(c, '未知人格彩蛋');
+    assert.ok(r.errors.some((e) => e.q === 'GHOST'));
+  });
+
+  it('题号越界(q=20)拒绝', () => {
+    const c = fixture();
+    c.easterEggs.LAZY.q = 20;
+    const r = fail(c, 'q=20');
+    assert.ok(r.errors.some((e) => e.q === 'LAZY'));
+  });
+
+  it('题号非整数(q=1.5)拒绝', () => {
+    const c = fixture();
+    c.easterEggs.LAZY.q = 1.5;
+    fail(c, 'q=1.5');
+  });
+
+  it('选项非 A-D(opt=E)拒绝', () => {
+    const c = fixture();
+    c.easterEggs.LAZY.opt = 'E';
+    const r = fail(c, 'opt=E');
+    assert.ok(r.errors.some((e) => e.q === 'LAZY'));
+  });
+
+  it('两个彩蛋共用同一触发位拒绝', () => {
+    const c = fixture();
+    c.easterEggs.NAKED = { q: c.easterEggs.LAZY.q, opt: c.easterEggs.LAZY.opt };
+    const r = fail(c, '触发位重复');
+    assert.ok(r.errors.some((e) => e.q === 'NAKED' && e.message.includes('共用')));
+  });
+
+  it('easterEggs 不是对象(数组/null)拒绝', () => {
+    for (const bad of [[], null]) {
+      const c = fixture();
+      c.easterEggs = bad;
+      assert.equal(validateContent(c, ALLOWED_TAGS).ok, false, `应拒绝 ${JSON.stringify(bad)}`);
+    }
+  });
+
+  it('出厂 EASTER_EGGS 全部合法(回归保护)', () => {
+    const r = validateContent(fixture(), ALLOWED_TAGS);
+    assert.equal(r.ok, true);
   });
 });

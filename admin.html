@@ -65,7 +65,6 @@
             <span id="status-text">未加载</span>
           </div>
           <div class="row">
-            <button id="btn-save" class="btn btn--primary" type="button">保存到 GitHub</button>
             <button id="btn-restore-default" class="btn" type="button">恢复默认题库</button>
             <button id="btn-refresh" class="btn" type="button">重新加载</button>
             <button id="btn-logout" class="btn btn--ghost" type="button">退出</button>
@@ -73,7 +72,22 @@
         </div>
         <p id="warning-banner" class="warning-text" hidden></p>
         <p id="errors-list" class="error-text" hidden></p>
+
+        <div class="egg-panel">
+          <h2>彩蛋位设置</h2>
+          <p class="hint">
+            彩蛋 = 给某彩蛋人格指定「第几题第几个选项」作为专属触发位。触发条件:答中该选项,且该人格 tag 全程只出现一次。<b>Q12 的彩蛋需最高核心恰为 2 才解锁</b>(玄学彩蛋规则)。
+            删除触发位后,该彩蛋人格将无法被玩家获得。
+          </p>
+          <div id="egg-panel"></div>
+        </div>
+
         <div id="editor-form" class="editor-form"></div>
+
+        <div class="editor-footer">
+          <button id="btn-save" class="btn btn--primary btn--save" type="button">保存到 GitHub</button>
+          <p class="hint">保存后推送到 GitHub,帽子云检测到 push 后 1-3 分钟内全站生效</p>
+        </div>
       </div>
     </section>
   </main>

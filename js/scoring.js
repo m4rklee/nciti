@@ -7,10 +7,9 @@ import {
   SCHOOL_TAGS,
   SCHOOLS,
   SCORABLE_CORES,
-  EASTER_EGGS,
   PERSONALITIES,
 } from './data.js';
-import { getQuestions } from './content.js';
+import { getQuestions, getEasterEggs } from './content.js';
 
 /**
  * @param {string[]} answers - 长度 20，每项为 'A'|'B'|'C'|'D'
@@ -58,6 +57,8 @@ export function computeSchoolTotals(scores) {
  * @param {() => number} random
  */
 export function pickResult(scores, answers, schoolTotals, random = Math.random) {
+  const easterEggs = getEasterEggs();
+
   // 1) 隐藏款
   if (schoolTotals[SCHOOLS.BARE] >= 8 && schoolTotals[SCHOOLS.SYSTEM] === 0) {
     return pack('VOID', scores, schoolTotals, 'hidden');
@@ -77,7 +78,7 @@ export function pickResult(scores, answers, schoolTotals, random = Math.random) 
 
   // 3) 非玄学彩蛋：专属题命中 + 该彩蛋得分=1 + 任意核心均 <= 2。
   if (maxCore <= 2) {
-    for (const [eggId, rule] of Object.entries(EASTER_EGGS)) {
+    for (const [eggId, rule] of Object.entries(easterEggs)) {
       if (rule.q === 11) continue;
       if (answers[rule.q] === rule.opt && (scores[eggId] || 0) === 1) {
         return pack(eggId, scores, schoolTotals, 'easter');
@@ -93,7 +94,7 @@ export function pickResult(scores, answers, schoolTotals, random = Math.random) 
 
   // 5) Q12 玄学彩蛋：存在一定人格方向（最高核心恰为 2）时解锁。
   if (maxCore === 2) {
-    for (const [eggId, rule] of Object.entries(EASTER_EGGS)) {
+    for (const [eggId, rule] of Object.entries(easterEggs)) {
       if (rule.q !== 11) continue;
       if (answers[rule.q] === rule.opt && (scores[eggId] || 0) === 1) {
         return pack(eggId, scores, schoolTotals, 'easter');

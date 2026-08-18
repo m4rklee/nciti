@@ -109,6 +109,60 @@ body {
 .status-dot { width: 10px; height: 10px; border-radius: 50%; background: #22c55e; }
 .status-dot.status--dirty { background: #eab308; }
 
+/* 页面底部保存区 */
+.editor-footer {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-top: 20px;
+  padding-top: 16px;
+  border-top: 1px solid var(--border);
+}
+.btn--save { padding: 12px 28px; font-size: 15px; font-weight: 600; }
+.editor-footer .hint { margin: 0; }
+@media (max-width: 640px) {
+  .editor-footer { flex-direction: column; align-items: stretch; }
+  .btn--save { width: 100%; }
+}
+
+/* 彩蛋位设置面板 */
+.egg-panel {
+  border: 1px dashed var(--border);
+  border-radius: var(--radius);
+  padding: 14px 16px;
+  margin-bottom: 18px;
+  background: #fafafa;
+}
+.egg-panel h2 { margin: 0 0 6px; font-size: 15px; }
+.egg-panel .hint { margin: 0 0 12px; }
+
+.egg-row, .egg-add {
+  display: grid;
+  grid-template-columns: minmax(130px, 1fr) 120px 90px auto;
+  gap: 8px;
+  align-items: center;
+  margin-bottom: 8px;
+}
+.egg-row select, .egg-add select {
+  width: 100%;
+  padding: 6px 8px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  font: inherit;
+  background: #fff;
+}
+.egg-name { font-size: 13px; font-weight: 600; }
+.egg-add { border-top: 1px solid var(--border); padding-top: 10px; margin-top: 2px; }
+.egg-add select:first-child { min-width: 0; }
+.egg-del { padding: 6px 10px; font-size: 13px; }
+
+@media (max-width: 640px) {
+  .egg-row, .egg-add { grid-template-columns: 1fr 1fr; }
+  .egg-row .egg-name, .egg-add select:first-child { grid-column: 1 / -1; }
+}
+
 /* 题目表单 */
 .editor-form { display: grid; gap: 14px; }
 

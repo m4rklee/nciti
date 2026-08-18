@@ -28,6 +28,7 @@ let sha = null; // 远程 content.json 的 blob sha(PUT 防覆盖必需)
 let remoteVersion = '';
 let demoMode = false; // 仅查看模式:不连 GitHub
 let dirty = false;
+let eggs = EASTER_EGGS; // 当前生效彩蛋表(与 questions 一同来自线上内容)
 
 /* ---------------- 工具 ---------------- */
 
@@ -163,6 +164,7 @@ $('#btn-login-demo').addEventListener('click', async () => {
     const result = validateContent(json, Object.keys(PERSONALITIES));
     sha = null;
     remoteVersion = json.version;
+    eggs = json.easterEggs ?? EASTER_EGGS;
     renderEditor(result.ok ? result.questions : json.questions, result.ok ? null : result);
     updateStatus('演示模式(本地内容,不会保存)');
     $('#btn-save').disabled = true;
@@ -209,6 +211,7 @@ async function loadFromGitHub() {
   if (notFound) {
     sha = null;
     remoteVersion = '';
+    eggs = EASTER_EGGS;
     json = { version: '', questions: QUESTIONS };
     renderEditor(QUESTIONS, null);
     updateStatus('仓库尚无 content.json,保存将新建文件');
@@ -222,6 +225,7 @@ async function loadFromGitHub() {
   } catch {
     // 远程内容损坏:仍渲染原始文本不可行,回退默认题库并警告,站长可恢复默认
     sha = null;
+    eggs = EASTER_EGGS;
     json = { version: '', questions: QUESTIONS };
     renderEditor(QUESTIONS, null);
     updateStatus('远程 content.json 损坏,已回退默认题库。点「保存」或「恢复默认题库」修复');
@@ -229,6 +233,7 @@ async function loadFromGitHub() {
   }
 
   remoteVersion = parsed.version ?? '';
+  eggs = parsed.easterEggs ?? EASTER_EGGS;
   const result = validateContent(parsed, Object.keys(PERSONALITIES));
   renderEditor(parsed.questions, result.ok ? null : result);
   updateStatus(
@@ -238,10 +243,26 @@ async function loadFromGitHub() {
 
 /* ---------------- 编辑器渲染 ---------------- */
 
-/** 彩蛋位映射 q(0-based):opt → 人格 id */
-const EGG_MAP = {};
-for (const [eggId, rule] of Object.entries(EASTER_EGGS)) {
-  EGG_MAP[`${rule.q}:${rule.opt}`] = eggId;
+/** 彩蛋位映射 q(0-based):opt → 人格 id(按当前生效彩蛋表实时构建) */
+function buildEggMap() {
+  const m = {};
+  for (const [eggId, rule] of Object.entries(eggs)) m[`${rule.q}:${rule.opt}`] = eggId;
+  return m;
+}
+
+/** 题号下拉(Q1-Q20,value=0-based 下标) */
+function qOptionsHTML(selected) {
+  let html = '';
+  for (let i = 0; i < 20; i++) {
+    const sel = i === selected ? ' selected' : '';
+    html += `<option value="${i}"${sel}>Q${i + 1}</option>`;
+  }
+  return html;
+}
+
+/** 选项下拉(A-D) */
+function optOptionsHTML(selected) {
+  return ['A', 'B', 'C', 'D'].map((k) => `<option value="${k}"${k === selected ? ' selected' : ''}>选项 ${k}</option>`).join('');
 }
 
 /** 按流派分组的人格下拉选项 */
@@ -275,9 +296,10 @@ function renderEditor(questions, validation) {
   // 在此统一切换,避免调用方遗漏导致卡在加载视图。
   showView('editor');
   const form = $('#editor-form');
+  const eggMap = buildEggMap();
   const fieldsets = questions.map((q, i) => {
     const optionsRows = q.options.map((opt) => {
-      const eggId = EGG_MAP[`${i}:${opt.key}`];
+      const eggId = eggMap[`${i}:${opt.key}`];
       const eggBadge = eggId
         ? `<span class="egg-badge" title="彩蛋位:选项 ${opt.key} 指向人格「${eggId} · ${PERSONALITIES[eggId]?.zh}」。改动该选项的 tag 会使此彩蛋判定失效">彩蛋位 ✦</span>`
         : '';
@@ -317,7 +339,71 @@ function renderEditor(questions, validation) {
     el.addEventListener('input', () => markDirty(true));
     el.addEventListener('change', () => markDirty(true));
   });
+  renderEggPanel();
   markDirty(false);
+}
+
+/* ---------------- 彩蛋位设置面板 ---------------- */
+
+/**
+ * 渲染彩蛋位面板:每行一个彩蛋(人格 + 触发题号 + 选项 + 删除),
+ * 底部一行添加入口(未占用触发位的彩蛋人格)。
+ */
+function renderEggPanel() {
+  const panel = $('#egg-panel');
+  const rows = Object.entries(eggs)
+    .map(([id, rule]) => `
+      <div class="egg-row" data-egg="${id}">
+        <span class="egg-name">${id} · ${PERSONALITIES[id]?.zh ?? ''}</span>
+        <select class="egg-q" data-egg="${id}">${qOptionsHTML(rule.q)}</select>
+        <select class="egg-opt" data-egg="${id}">${optOptionsHTML(rule.opt)}</select>
+        <button type="button" class="btn btn--ghost egg-del" data-egg="${id}">删除</button>
+      </div>`)
+    .join('');
+
+  const unassigned = Object.keys(PERSONALITIES).filter((id) => PERSONALITIES[id].kind === 'easter' && !(id in eggs));
+  const addRow = `
+    <div class="egg-add">
+      <select id="egg-add-id">
+        <option value="">+ 选择彩蛋人格</option>
+        ${unassigned.map((id) => `<option value="${id}">${id} · ${PERSONALITIES[id].zh}</option>`).join('')}
+      </select>
+      <select id="egg-add-q">${qOptionsHTML()}</select>
+      <select id="egg-add-opt">${optOptionsHTML()}</select>
+      <button type="button" class="btn" id="egg-add-btn">添加</button>
+    </div>`;
+  panel.innerHTML = rows + addRow;
+
+  panel.querySelectorAll('.egg-q, .egg-opt').forEach((el) => {
+    el.addEventListener('change', () => markDirty(true));
+  });
+  panel.querySelectorAll('.egg-del').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const id = btn.dataset.egg;
+      const zh = PERSONALITIES[id]?.zh ?? '';
+      if (!window.confirm(`删除彩蛋「${id} · ${zh}」的触发位?删除后该彩蛋人格将无法被玩家获得。`)) return;
+      delete eggs[id];
+      markDirty(true);
+      renderEggPanel();
+    });
+  });
+  $('#egg-add-btn').addEventListener('click', () => {
+    const id = $('#egg-add-id').value;
+    const q = Number($('#egg-add-q').value);
+    const opt = $('#egg-add-opt').value;
+    if (!id) {
+      alert('请先选择要新增彩蛋的人格');
+      return;
+    }
+    const occupied = Object.values(eggs).some((r) => r.q === q && r.opt === opt);
+    if (occupied) {
+      alert(`Q${q + 1}-选项${opt} 已被其他彩蛋占用,请换一个触发位`);
+      return;
+    }
+    eggs[id] = { q, opt };
+    markDirty(true);
+    renderEggPanel();
+  });
 }
 
 function markDirty(isDirty) {
@@ -365,7 +451,15 @@ function collectContent() {
     };
     questions.push(q);
   });
-  return { version: bumpVersion(remoteVersion), questions };
+  const easterEggs = {};
+  document.querySelectorAll('#egg-panel .egg-row').forEach((row) => {
+    const id = row.dataset.egg;
+    easterEggs[id] = {
+      q: Number(row.querySelector('.egg-q').value),
+      opt: row.querySelector('.egg-opt').value,
+    };
+  });
+  return { version: bumpVersion(remoteVersion), questions, easterEggs };
 }
 
 async function saveToGitHub(content, opts = {}) {
@@ -409,20 +503,19 @@ $('#btn-save').addEventListener('click', async () => {
   const btn = $('#btn-save');
   const content = collectContent();
 
-  // 彩蛋位 tag 变更提醒(不阻断):EGG_MAP 记录彩蛋对应的人格,
-  // 若该位置 tag 已被改走,彩蛋判定将失效,保存前复述一次后果
+  // 彩蛋可达性提醒(不阻断):彩蛋触发要求「答中触发位且该人格 tag 全程只出现一次」,
+  // 若触发位选项的 tag 不是该彩蛋人格,彩蛋将无法触发。保存前复述后果。
   const eggWarnings = [];
-  for (const [pos, eggId] of Object.entries(EGG_MAP)) {
-    const [qi, key] = pos.split(':');
-    const q = content.questions[Number(qi)];
-    const opt = q?.options.find((o) => o.key === key);
+  for (const [eggId, rule] of Object.entries(content.easterEggs)) {
+    const q = content.questions[rule.q];
+    const opt = q?.options.find((o) => o.key === rule.opt);
     if (opt && opt.tag !== eggId) {
-      eggWarnings.push(`Q${Number(qi) + 1}-${key}「${eggId}」彩蛋位已被改为「${opt.tag}」`);
+      eggWarnings.push(`Q${rule.q + 1}-选项${rule.opt}「${eggId}」触发位指向的选项 tag 是「${opt.tag}」,该彩蛋将无法触发`);
     }
   }
   if (eggWarnings.length) {
     const ok = window.confirm(
-      `以下彩蛋位的人格 tag 被改动,对应彩蛋判定将失效:\n${eggWarnings.join('\n')}\n\n确认继续保存?`,
+      `以下彩蛋将无法触发:\n${eggWarnings.join('\n')}\n\n确认继续保存?`,
     );
     if (!ok) return;
   }
@@ -438,6 +531,7 @@ $('#btn-save').addEventListener('click', async () => {
   try {
     const saved = await saveToGitHub(content);
     if (saved) {
+      eggs = content.easterEggs;
       renderEditor(content.questions, null);
       updateStatus(`已保存到 ${REPO} · sha ${sha.slice(0, 7)} · version ${remoteVersion}`);
       toast('已保存到 GitHub,帽子云检测到 push 后 1-3 分钟内全站生效');
@@ -449,14 +543,15 @@ $('#btn-save').addEventListener('click', async () => {
 
 $('#btn-restore-default').addEventListener('click', async () => {
   if (demoMode) return;
-  const ok = window.confirm('将用内置默认题库覆盖远程 content.json(20 题 × 4 选项),确认?');
+  const ok = window.confirm('将用内置默认题库覆盖远程 content.json(20 题 × 4 选项 + 出厂彩蛋表),确认?');
   if (!ok) return;
-  const content = { version: bumpVersion(remoteVersion), questions: QUESTIONS };
+  const content = { version: bumpVersion(remoteVersion), easterEggs: EASTER_EGGS, questions: QUESTIONS };
   const btn = $('#btn-restore-default');
   btn.disabled = true;
   try {
     const saved = await saveToGitHub(content, { message: 'chore(data): 恢复默认题库 (admin)' });
     if (saved) {
+      eggs = EASTER_EGGS;
       renderEditor(QUESTIONS, null);
       updateStatus(`已恢复默认题库 · sha ${sha.slice(0, 7)}`);
       toast('已保存,帽子云 1-3 分钟内生效');
@@ -471,6 +566,7 @@ $('#btn-refresh').addEventListener('click', async () => {
   if (demoMode) {
     const res = await fetch(`./data/content.json?t=${Date.now()}`);
     const json = await res.json();
+    eggs = json.easterEggs ?? EASTER_EGGS;
     renderEditor(json.questions, null);
     return;
   }
@@ -502,7 +598,7 @@ $('#btn-copy-manual').addEventListener('click', async () => {
     const content = collectContent();
     text += JSON.stringify(content, null, 2);
   } catch {
-    text += JSON.stringify({ version: '', questions: QUESTIONS }, null, 2);
+    text += JSON.stringify({ version: '', easterEggs: EASTER_EGGS, questions: QUESTIONS }, null, 2);
   }
   try {
     await navigator.clipboard.writeText(text);

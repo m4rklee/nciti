@@ -7,21 +7,25 @@
  * 模块顶层零副作用(Node 单测可直接 import);所有导出函数见下。
  */
 
-import { QUESTIONS, PERSONALITIES } from './data.js';
+import { QUESTIONS, PERSONALITIES, EASTER_EGGS } from './data.js';
 
 const FETCH_TIMEOUT_MS = 8000;
 
 /** 模块级可变题库;loadContent 校验通过后原子替换 */
 let current = QUESTIONS;
+let currentEggs = EASTER_EGGS;
 let currentVersion = '';
 
 /**
  * 校验线上题库结构。纯函数,可单测。
  * 约束:恰好 20 题 × 4 选项(key 恰为 A-D 各一次);
- *       tag 必须在 allowedTags 内 —— 与 scoring 的 EASTER_EGGS 下标判定强相关。
+ *       tag 必须在 allowedTags 内 —— 与 scoring 的彩蛋下标判定强相关。
+ *       easterEggs 可选:缺省回退 data.js 内置 EASTER_EGGS;
+ *       存在时:key 必须是 kind=easter 的人格 id,rule 为 { q: 0-19 整数, opt: A-D },
+ *       (q,opt) 两两不重复(重复时判定顺序歧义)。
  * @param {unknown} input
  * @param {string[]} allowedTags
- * @returns {{ ok: boolean, questions?: unknown[], errors?: Array<{ q: number|string, field: string, message: string }> }}
+ * @returns {{ ok: boolean, questions?: unknown[], easterEggs?: Record<string, { q: number, opt: string }>, errors?: Array<{ q: number|string, field: string, message: string }> }}
  */
 export function validateContent(input, allowedTags) {
   const errors = [];
@@ -98,14 +102,62 @@ export function validateContent(input, allowedTags) {
     });
   });
 
+  // easterEggs 可选:缺省回退 data.js 内置(兼容旧版 content.json)
+  const easterEggs = input.easterEggs === undefined ? EASTER_EGGS : input.easterEggs;
+  if (easterEggs !== EASTER_EGGS) {
+    validateEasterEggs(easterEggs, errors, questions.length);
+  }
+
   return errors.length
     ? { ok: false, errors }
-    : { ok: true, questions };
+    : { ok: true, questions, easterEggs };
+}
+
+/**
+ * 彩蛋表结构校验(见 validateContent 头部注释)。
+ * @param {unknown} eggs
+ * @param {Array<{ q: number|string, field: string, message: string }>} errors
+ * @param {number} questionCount
+ */
+function validateEasterEggs(eggs, errors, questionCount) {
+  if (typeof eggs !== 'object' || eggs === null || Array.isArray(eggs)) {
+    errors.push({ q: 'global', field: 'easterEggs', message: 'easterEggs 必须是对象' });
+    return;
+  }
+  const seenPos = new Set();
+  for (const [eggId, rule] of Object.entries(eggs)) {
+    if (PERSONALITIES[eggId]?.kind !== 'easter') {
+      errors.push({ q: eggId, field: 'easterEggs', message: `彩蛋人格「${eggId}」不存在或不是彩蛋类(kind=easter)` });
+      continue;
+    }
+    if (typeof rule !== 'object' || rule === null) {
+      errors.push({ q: eggId, field: 'easterEggs', message: `彩蛋「${eggId}」的规则不是对象` });
+      continue;
+    }
+    if (!Number.isInteger(rule.q) || rule.q < 0 || rule.q >= questionCount) {
+      errors.push({ q: eggId, field: 'easterEggs', message: `彩蛋「${eggId}」的题号 q=${rule.q} 非法(需 0-${questionCount - 1} 整数)` });
+    }
+    if (!['A', 'B', 'C', 'D'].includes(rule.opt)) {
+      errors.push({ q: eggId, field: 'easterEggs', message: `彩蛋「${eggId}」的选项 opt=${rule.opt} 非法,只允许 A/B/C/D` });
+    }
+    if (Number.isInteger(rule.q) && ['A', 'B', 'C', 'D'].includes(rule.opt)) {
+      const pos = `${rule.q}:${rule.opt}`;
+      if (seenPos.has(pos)) {
+        errors.push({ q: eggId, field: 'easterEggs', message: `彩蛋「${eggId}」与另一彩蛋共用触发位 Q${rule.q + 1}-${rule.opt},判定顺序歧义` });
+      }
+      seenPos.add(pos);
+    }
+  }
 }
 
 /** 同步返回当前生效题库(未加载线上内容时 = data.js 默认) */
 export function getQuestions() {
   return current;
+}
+
+/** 同步返回当前生效彩蛋表(未加载线上内容时 = data.js 默认) */
+export function getEasterEggs() {
+  return currentEggs;
 }
 
 /** 当前生效题库版本号(线上未加载成功时为空串) */
@@ -140,6 +192,7 @@ export async function loadContent(url = './data/content.json') {
       return { source: 'default', errors: result.errors };
     }
     current = result.questions;
+    currentEggs = result.easterEggs;
     currentVersion = typeof json.version === 'string' ? json.version : '';
     return { source: 'remote', version: currentVersion };
   } catch (err) {

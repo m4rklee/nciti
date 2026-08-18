@@ -1,5 +1,83 @@
 {
   "version": "0.1.0",
+  "easterEggs": {
+    "LAZY": {
+      "q": 0,
+      "opt": "D"
+    },
+    "NAKED": {
+      "q": 1,
+      "opt": "D"
+    },
+    "MONK": {
+      "q": 1,
+      "opt": "C"
+    },
+    "CHILL": {
+      "q": 2,
+      "opt": "C"
+    },
+    "FATAL": {
+      "q": 3,
+      "opt": "D"
+    },
+    "DENY": {
+      "q": 4,
+      "opt": "D"
+    },
+    "SMART": {
+      "q": 5,
+      "opt": "B"
+    },
+    "BLINDER": {
+      "q": 6,
+      "opt": "D"
+    },
+    "STUB": {
+      "q": 7,
+      "opt": "D"
+    },
+    "WORRY": {
+      "q": 8,
+      "opt": "D"
+    },
+    "NOPE": {
+      "q": 9,
+      "opt": "D"
+    },
+    "DDL": {
+      "q": 10,
+      "opt": "D"
+    },
+    "KARMA": {
+      "q": 11,
+      "opt": "A"
+    },
+    "FENG": {
+      "q": 11,
+      "opt": "B"
+    },
+    "ASTRAL": {
+      "q": 11,
+      "opt": "C"
+    },
+    "ANCE": {
+      "q": 11,
+      "opt": "D"
+    },
+    "STASH": {
+      "q": 12,
+      "opt": "B"
+    },
+    "PET": {
+      "q": 17,
+      "opt": "C"
+    },
+    "LEGACY": {
+      "q": 17,
+      "opt": "D"
+    }
+  },
   "questions": [
     {
       "id": "Q1",
