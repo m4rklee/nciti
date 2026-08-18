@@ -1,0 +1,545 @@
+{
+  "version": "0.1.0",
+  "questions": [
+    {
+      "id": "Q1",
+      "section": "身体习惯",
+      "text": "你的「续命饮料」通常是？",
+      "options": [
+        {
+          "key": "A",
+          "text": "全糖奶茶加椰果",
+          "tag": "LESER"
+        },
+        {
+          "key": "B",
+          "text": "养生壶煮枸杞，严格作息",
+          "tag": "HOARDER"
+        },
+        {
+          "key": "C",
+          "text": "冰美式，不碍熬夜",
+          "tag": "YOLO"
+        },
+        {
+          "key": "D",
+          "text": "功能饮料续命专用，没力气想别的",
+          "tag": "LAZY"
+        }
+      ]
+    },
+    {
+      "id": "Q2",
+      "section": "身体习惯",
+      "text": "体检，你多久一次？",
+      "options": [
+        {
+          "key": "A",
+          "text": "每年准时，雷打不动",
+          "tag": "PLANNER"
+        },
+        {
+          "key": "B",
+          "text": "半年一次，能查的全查",
+          "tag": "HOARDER"
+        },
+        {
+          "key": "C",
+          "text": "公司组织的才去，顺便蹭早餐",
+          "tag": "MONK"
+        },
+        {
+          "key": "D",
+          "text": "三五年从未体检",
+          "tag": "NAKED"
+        }
+      ]
+    },
+    {
+      "id": "Q3",
+      "section": "身体习惯",
+      "text": "深夜11点你在干嘛？",
+      "options": [
+        {
+          "key": "A",
+          "text": "追剧+炸鸡，这才是人生",
+          "tag": "LESER"
+        },
+        {
+          "key": "B",
+          "text": "对比保障条款，失眠纠结",
+          "tag": "EMMM"
+        },
+        {
+          "key": "C",
+          "text": "早睡早起，坚持晨跑",
+          "tag": "CHILL"
+        },
+        {
+          "key": "D",
+          "text": "刷手机，想着“明晚一定早睡”",
+          "tag": "YOLO"
+        }
+      ]
+    },
+    {
+      "id": "Q4",
+      "section": "身体习惯",
+      "text": "你运动吗？",
+      "options": [
+        {
+          "key": "A",
+          "text": "每周三次，有氧+力量",
+          "tag": "PLANNER"
+        },
+        {
+          "key": "B",
+          "text": "走路就算",
+          "tag": "LESER"
+        },
+        {
+          "key": "C",
+          "text": "办了卡、买了意外险、但只洗澡",
+          "tag": "COVERED"
+        },
+        {
+          "key": "D",
+          "text": "爬楼梯都嫌累，生死有命",
+          "tag": "FATAL"
+        }
+      ]
+    },
+    {
+      "id": "Q5",
+      "section": "保单观",
+      "text": "你现在有几份商业保险？",
+      "options": [
+        {
+          "key": "A",
+          "text": "重疾+医疗+意外+定寿，齐了",
+          "tag": "HOARDER"
+        },
+        {
+          "key": "B",
+          "text": "有一两份，自己买的",
+          "tag": "COVERED"
+        },
+        {
+          "key": "C",
+          "text": "就社保卡，商业的没碰过",
+          "tag": "YOLO"
+        },
+        {
+          "key": "D",
+          "text": "我妈让我买过，我退了",
+          "tag": "DENY"
+        }
+      ]
+    },
+    {
+      "id": "Q6",
+      "section": "保单观",
+      "text": "你买保险最主要因为？",
+      "options": [
+        {
+          "key": "A",
+          "text": "真怕出事，想兜底",
+          "tag": "COVERED"
+        },
+        {
+          "key": "B",
+          "text": "爸妈催的，买个安心",
+          "tag": "SMART"
+        },
+        {
+          "key": "C",
+          "text": "我还没买呢…还在比哪款好",
+          "tag": "EMMM"
+        },
+        {
+          "key": "D",
+          "text": "我运气好，用不上",
+          "tag": "LUCKY"
+        }
+      ]
+    },
+    {
+      "id": "Q7",
+      "section": "保单观",
+      "text": "保险代理人加你微信，你？",
+      "options": [
+        {
+          "key": "A",
+          "text": "认真听，问清条款",
+          "tag": "PLANNER"
+        },
+        {
+          "key": "B",
+          "text": "先听着，回头自己查",
+          "tag": "COVERED"
+        },
+        {
+          "key": "C",
+          "text": "加了三个代理人，一个没回",
+          "tag": "EMMM"
+        },
+        {
+          "key": "D",
+          "text": "秒删，怕被坑",
+          "tag": "BLINDER"
+        }
+      ]
+    },
+    {
+      "id": "Q8",
+      "section": "保单观",
+      "text": "你给父母买过保险吗？",
+      "options": [
+        {
+          "key": "A",
+          "text": "早配齐了",
+          "tag": "HOARDER"
+        },
+        {
+          "key": "B",
+          "text": "打算买，正在比",
+          "tag": "PLANNER"
+        },
+        {
+          "key": "C",
+          "text": "自己都还没买呢",
+          "tag": "YOLO"
+        },
+        {
+          "key": "D",
+          "text": "知道该买，等发年终奖再说",
+          "tag": "STUB"
+        }
+      ]
+    },
+    {
+      "id": "Q9",
+      "section": "心态/风险",
+      "text": "刷到「XX突发心梗去世」，你？",
+      "options": [
+        {
+          "key": "A",
+          "text": "立刻检查自己保单够不够",
+          "tag": "COVERED"
+        },
+        {
+          "key": "B",
+          "text": "心慌一下，然后忘了",
+          "tag": "YOLO"
+        },
+        {
+          "key": "C",
+          "text": "算命的说我命硬，不关我事",
+          "tag": "LUCKY"
+        },
+        {
+          "key": "D",
+          "text": "我保单齐全，但我还是慌",
+          "tag": "WORRY"
+        }
+      ]
+    },
+    {
+      "id": "Q10",
+      "section": "心态/风险",
+      "text": "关于买保险，你现在的真实状态是？",
+      "options": [
+        {
+          "key": "A",
+          "text": "比了30款，还没决定哪款好",
+          "tag": "EMMM"
+        },
+        {
+          "key": "B",
+          "text": "天选之人不需要保险",
+          "tag": "LUCKY"
+        },
+        {
+          "key": "C",
+          "text": "垃圾食品都吃着呢，保险不急",
+          "tag": "LESER"
+        },
+        {
+          "key": "D",
+          "text": "不用劝，不买就是不买，再说拉黑",
+          "tag": "NOPE"
+        }
+      ]
+    },
+    {
+      "id": "Q11",
+      "section": "心态/风险",
+      "text": "朋友让你一起买意外险，你？",
+      "options": [
+        {
+          "key": "A",
+          "text": "我已经买了",
+          "tag": "COVERED"
+        },
+        {
+          "key": "B",
+          "text": "研究三天再决定",
+          "tag": "EMMM"
+        },
+        {
+          "key": "C",
+          "text": "不用，我命硬",
+          "tag": "LUCKY"
+        },
+        {
+          "key": "D",
+          "text": "出事了？正好，我现在就去研究",
+          "tag": "DDL"
+        }
+      ]
+    },
+    {
+      "id": "Q12",
+      "section": "心态/风险",
+      "text": "🧙 玄学时间：如果兜底必须选一种玄学，你选？",
+      "options": [
+        {
+          "key": "A",
+          "text": "积德，好人有好报",
+          "tag": "KARMA"
+        },
+        {
+          "key": "B",
+          "text": "风水，转运珠比保单灵",
+          "tag": "FENG"
+        },
+        {
+          "key": "C",
+          "text": "星座，射手座不需要重疾",
+          "tag": "ASTRAL"
+        },
+        {
+          "key": "D",
+          "text": "祖宗保佑，祖上积德",
+          "tag": "ANCE"
+        }
+      ]
+    },
+    {
+      "id": "Q13",
+      "section": "钱包/消费",
+      "text": "发工资第一件事？",
+      "options": [
+        {
+          "key": "A",
+          "text": "先转一笔进储蓄/基金",
+          "tag": "PLANNER"
+        },
+        {
+          "key": "B",
+          "text": "余额存着，但没买保险",
+          "tag": "STASH"
+        },
+        {
+          "key": "C",
+          "text": "全花，下月再说",
+          "tag": "LESER"
+        },
+        {
+          "key": "D",
+          "text": "先还花呗，保险？吃完再说",
+          "tag": "YOLO"
+        }
+      ]
+    },
+    {
+      "id": "Q14",
+      "section": "钱包/消费",
+      "text": "你的「大额支出」一般是？",
+      "options": [
+        {
+          "key": "A",
+          "text": "保险、理财、进修",
+          "tag": "HOARDER"
+        },
+        {
+          "key": "B",
+          "text": "限量、演唱会、潮玩",
+          "tag": "LESER"
+        },
+        {
+          "key": "C",
+          "text": "说走就走的短途长途旅行",
+          "tag": "YOLO"
+        },
+        {
+          "key": "D",
+          "text": "丁克养老旅居储备金",
+          "tag": "DINK"
+        }
+      ]
+    },
+    {
+      "id": "Q15",
+      "section": "钱包/消费",
+      "text": "突然要掏2万块钱，你？",
+      "options": [
+        {
+          "key": "A",
+          "text": "储蓄账户足额预留，随时可取",
+          "tag": "PLANNER"
+        },
+        {
+          "key": "B",
+          "text": "存款可凑齐，不影响正常生活",
+          "tag": "HOARDER"
+        },
+        {
+          "key": "C",
+          "text": "花呗分期",
+          "tag": "LESER"
+        },
+        {
+          "key": "D",
+          "text": "临时向亲友周转借钱",
+          "tag": "YOLO"
+        }
+      ]
+    },
+    {
+      "id": "Q16",
+      "section": "钱包/消费",
+      "text": "你记账吗？",
+      "options": [
+        {
+          "key": "A",
+          "text": "记，App里分了12类",
+          "tag": "PLANNER"
+        },
+        {
+          "key": "B",
+          "text": "不记，反正不够花",
+          "tag": "LESER"
+        },
+        {
+          "key": "C",
+          "text": "记，但月底发现全花奶茶上了",
+          "tag": "COVERED"
+        },
+        {
+          "key": "D",
+          "text": "记账是有钱人准备的",
+          "tag": "YOLO"
+        }
+      ]
+    },
+    {
+      "id": "Q17",
+      "section": "脑洞/兜底逻辑",
+      "text": "朋友问你「以后出事谁管你」，你真实想法是？",
+      "options": [
+        {
+          "key": "A",
+          "text": "保险存款提前全部安排到位",
+          "tag": "COVERED"
+        },
+        {
+          "key": "B",
+          "text": "等我老了有机器人保姆",
+          "tag": "TECHIE"
+        },
+        {
+          "key": "C",
+          "text": "和好友约定抱团互助养老",
+          "tag": "COHO"
+        },
+        {
+          "key": "D",
+          "text": "没想过这个问题，过于复杂",
+          "tag": "EMMM"
+        }
+      ]
+    },
+    {
+      "id": "Q18",
+      "section": "脑洞/兜底逻辑",
+      "text": "如果必须选一个「人生兜底依靠」，你选？",
+      "options": [
+        {
+          "key": "A",
+          "text": "保单+存款，最稳",
+          "tag": "HOARDER"
+        },
+        {
+          "key": "B",
+          "text": "我丁克，钱全留自己",
+          "tag": "DINK"
+        },
+        {
+          "key": "C",
+          "text": "毛孩子（猫狗）比人靠谱",
+          "tag": "PET"
+        },
+        {
+          "key": "D",
+          "text": "爸妈（含爸妈的爸妈）",
+          "tag": "LEGACY"
+        }
+      ]
+    },
+    {
+      "id": "Q19",
+      "section": "脑洞/兜底逻辑",
+      "text": "你对「买保险」的真实态度是？",
+      "options": [
+        {
+          "key": "A",
+          "text": "买了，安心",
+          "tag": "COVERED"
+        },
+        {
+          "key": "B",
+          "text": "该买，但懒得研究",
+          "tag": "LESER"
+        },
+        {
+          "key": "C",
+          "text": "身体好着呢，不用",
+          "tag": "YOLO"
+        },
+        {
+          "key": "D",
+          "text": "还需要再研究研究…",
+          "tag": "EMMM"
+        }
+      ]
+    },
+    {
+      "id": "Q20",
+      "section": "脑洞/兜底逻辑",
+      "text": "关于「未来科技养老」，你信几分？",
+      "options": [
+        {
+          "key": "A",
+          "text": "不相信，只有自身规划最可靠",
+          "tag": "PLANNER"
+        },
+        {
+          "key": "B",
+          "text": "完全相信，机器人养老很快落地",
+          "tag": "TECHIE"
+        },
+        {
+          "key": "C",
+          "text": "更信赖人与人互相帮扶",
+          "tag": "COHO"
+        },
+        {
+          "key": "D",
+          "text": "未来太远，走一步看一步",
+          "tag": "DINK"
+        }
+      ]
+    }
+  ]
+}

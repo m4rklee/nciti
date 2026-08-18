@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+  <meta name="robots" content="noindex, nofollow" />
+  <title>题库管理 · 保命 TI</title>
+  <link rel="stylesheet" href="./css/admin.css?v=1" />
+</head>
+<body>
+  <main class="admin">
+    <header class="admin__header">
+      <h1>题库管理 · 保命 TI</h1>
+      <p class="admin__sub">修改题干 / 选项文案 / 选项 tag,保存后推送到 GitHub,帽子云 1-3 分钟内全站生效。</p>
+    </header>
+
+    <!-- 登录 -->
+    <section id="view-login" class="view" hidden>
+      <div class="card">
+        <h2>连接 GitHub</h2>
+        <p class="hint">
+          粘贴一个 GitHub Personal Access Token(创建方式见 README「题库在线编辑」一节,
+          权限仅需本仓库 <code>Contents: Read and write</code>)。Token 只保存在<b>本机浏览器</b>的 localStorage,不会上传到本站以外的地方。
+        </p>
+        <label class="field">
+          <span>GitHub Token</span>
+          <input id="pat-input" type="password" autocomplete="off" spellcheck="false" placeholder="github_pat_..." />
+        </label>
+        <div class="row">
+          <button id="btn-login" class="btn btn--primary" type="button">保存并连接</button>
+          <button id="btn-login-demo" class="btn btn--ghost" type="button">仅查看表单(不保存)</button>
+        </div>
+        <p id="login-error" class="error-text" hidden></p>
+      </div>
+    </section>
+
+    <!-- 加载中 -->
+    <section id="view-loading" class="view" hidden>
+      <div class="card card--center">
+        <div class="spinner" aria-hidden="true"></div>
+        <p>正在从 GitHub 拉取题库…</p>
+      </div>
+    </section>
+
+    <!-- 错误 -->
+    <section id="view-error" class="view" hidden>
+      <div class="card">
+        <h2>出了点问题</h2>
+        <p id="error-detail" class="error-text"></p>
+        <div class="row">
+          <button id="btn-retry" class="btn btn--primary" type="button">重试</button>
+          <button id="btn-back-login" class="btn" type="button">重新输入 Token</button>
+          <button id="btn-copy-manual" class="btn btn--ghost" type="button">复制手动提交内容</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- 编辑器 -->
+    <section id="view-editor" class="view" hidden>
+      <div class="card">
+        <div class="editor-top">
+          <div class="editor-status">
+            <span class="status-dot" id="status-dot" aria-hidden="true"></span>
+            <span id="status-text">未加载</span>
+          </div>
+          <div class="row">
+            <button id="btn-save" class="btn btn--primary" type="button">保存到 GitHub</button>
+            <button id="btn-restore-default" class="btn" type="button">恢复默认题库</button>
+            <button id="btn-refresh" class="btn" type="button">重新加载</button>
+            <button id="btn-logout" class="btn btn--ghost" type="button">退出</button>
+          </div>
+        </div>
+        <p id="warning-banner" class="warning-text" hidden></p>
+        <p id="errors-list" class="error-text" hidden></p>
+        <div id="editor-form" class="editor-form"></div>
+      </div>
+    </section>
+  </main>
+
+  <script type="module" src="./js/admin.js?v=1"></script>
+</body>
+</html>

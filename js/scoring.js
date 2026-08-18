@@ -4,13 +4,13 @@
  */
 
 import {
-  QUESTIONS,
   SCHOOL_TAGS,
   SCHOOLS,
   SCORABLE_CORES,
   EASTER_EGGS,
   PERSONALITIES,
 } from './data.js';
+import { getQuestions } from './content.js';
 
 /**
  * @param {string[]} answers - 长度 20，每项为 'A'|'B'|'C'|'D'
@@ -27,13 +27,14 @@ export function scoreAnswers(answers, opts = {}) {
 
 /** @param {string[]} answers */
 export function tallyScores(answers) {
-  if (!Array.isArray(answers) || answers.length !== QUESTIONS.length) {
-    throw new Error(`需要 ${QUESTIONS.length} 个答案，收到 ${answers?.length ?? 0}`);
+  const questions = getQuestions();
+  if (!Array.isArray(answers) || answers.length !== questions.length) {
+    throw new Error(`需要 ${questions.length} 个答案，收到 ${answers?.length ?? 0}`);
   }
   const scores = {};
-  for (let i = 0; i < QUESTIONS.length; i++) {
+  for (let i = 0; i < questions.length; i++) {
     const key = answers[i];
-    const opt = QUESTIONS[i].options.find((o) => o.key === key);
+    const opt = questions[i].options.find((o) => o.key === key);
     if (!opt) throw new Error(`Q${i + 1} 无效选项: ${key}`);
     scores[opt.tag] = (scores[opt.tag] || 0) + 1;
   }

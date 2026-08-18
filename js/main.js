@@ -1,4 +1,5 @@
-import { QUESTIONS, PERSONALITIES } from './data.js';
+import { PERSONALITIES } from './data.js';
+import { loadContent, getQuestions } from './content.js';
 import { scoreAnswers } from './scoring.js';
 import { createUI } from './ui.js';
 import { createSimulation } from './simulator.js';
@@ -7,17 +8,18 @@ import { unlockPersonality, track } from './storage.js';
 const root = document.getElementById('app');
 const ui = createUI(root);
 
+let questions = getQuestions();
 let answers = [];
 let index = 0;
 let currentTypeId = '';
 let simulation = null;
 
 function start() {
-  answers = Array(QUESTIONS.length).fill(null);
+  answers = Array(questions.length).fill(null);
   index = 0;
   track('quiz_start');
   ui.showScreen('quiz');
-  ui.renderQuestion(QUESTIONS[index], index, QUESTIONS.length);
+  ui.renderQuestion(questions[index], index, questions.length);
 }
 
 function selectAnswer(key) {
@@ -26,15 +28,15 @@ function selectAnswer(key) {
   const completed = index + 1;
   index += 1;
 
-  if (index >= QUESTIONS.length) {
+  if (index >= questions.length) {
     finish();
     return;
   }
 
   if ([4, 8, 12, 16].includes(completed)) {
-    ui.showCheckpoint(completed, () => ui.renderQuestion(QUESTIONS[index], index, QUESTIONS.length));
+    ui.showCheckpoint(completed, () => ui.renderQuestion(questions[index], index, questions.length));
   } else {
-    ui.renderQuestion(QUESTIONS[index], index, QUESTIONS.length);
+    ui.renderQuestion(questions[index], index, questions.length);
   }
 }
 
@@ -96,3 +98,12 @@ if (previewId && PERSONALITIES[previewId]) {
 } else {
   ui.showScreen('cover');
 }
+
+// 异步拉取线上题库:封面先渲染不等网络,加载完成后原子替换。
+// 20 题槽位与 A-D key 不变,中途替换不影响计分与彩蛋判定。
+loadContent().then((res) => {
+  questions = getQuestions();
+  if (res.source === 'remote') {
+    console.info(`题库已加载: version=${res.version}`);
+  }
+});
