@@ -216,7 +216,7 @@ export function createUI(root) {
         <p>03 · LIFE SIMULATOR</p>
         <h2>如果带着这套 Buff<br>过完一生，会怎样？</h2>
         <span>模拟大病、失业、家庭与养老事件，生成你的完整人生报告。</span>
-        <button class="btn btn--light" type="button" data-action="sim-setup">进入 3 分钟人生模拟器 →</button>
+        <a class="btn btn--light" style="display:block" href="https://ncilife-ltc1z0hq.maozi.io/life-demo-v2.html" target="_blank" rel="noopener">进入 3 分钟人生模拟器 →</a>
       </section>
 
       <section class="action-panel">
